@@ -1,4 +1,4 @@
-"""  
+"""
 Copyright (c) 2019-present NAVER Corp.
 MIT License
 """
@@ -32,10 +32,10 @@ class CRAFT(nn.Module):
     def __init__(self, pretrained=False, freeze=False):
         super(CRAFT, self).__init__()
 
-        """ Base network """
+        # Base network
         self.basenet = vgg16_bn(pretrained, freeze)
 
-        """ U network """
+        # U network
         self.upconv1 = double_conv(1024, 512, 256)
         self.upconv2 = double_conv(512, 256, 128)
         self.upconv3 = double_conv(256, 128, 64)
@@ -55,12 +55,12 @@ class CRAFT(nn.Module):
         init_weights(self.upconv3.modules())
         init_weights(self.upconv4.modules())
         init_weights(self.conv_cls.modules())
-        
+
     def forward(self, x):
-        """ Base network """
+        # Base network
         sources = self.basenet(x)
 
-        """ U network """
+        # U network
         y = torch.cat([sources[0], sources[1]], dim=1)
         y = self.upconv1(y)
 
@@ -77,8 +77,8 @@ class CRAFT(nn.Module):
         feature = self.upconv4(y)
 
         y = self.conv_cls(feature)
+        return y.permute(0, 2, 3, 1), feature
 
-        return y.permute(0,2,3,1), feature
 
 if __name__ == '__main__':
     model = CRAFT(pretrained=True).cuda()
