@@ -18,7 +18,7 @@ from torch.autograd import Variable
 
 from .craft import CRAFT
 from .craft_utils import getDetBoxes, adjustResultCoordinates
-from .file_utils import get_files, saveResult
+from .file_utils import get_files, save_result
 from .imgproc import resize_aspect_ratio, normalize_mean_variance, cvt_to_heatmap, load_image
 from .refinenet import RefineNet
 
@@ -195,7 +195,7 @@ def infer_batch():
         filename, file_ext = os.path.splitext(os.path.basename(image_path))
         mask_file = result_folder + "/res_" + filename + '_mask.jpg'
         cv2.imwrite(mask_file, score_text)
-        saveResult(image_path, image[:, :, ::-1], polys, dirname=result_folder)
+        save_result(image_path, image[:, :, ::-1], polys, dirname=result_folder)
 
 
 if __name__ == '__main__':
