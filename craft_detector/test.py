@@ -19,7 +19,7 @@ from torch.autograd import Variable
 from .craft import CRAFT
 from .craft_utils import getDetBoxes, adjustResultCoordinates
 from .file_utils import get_files, saveResult
-from .imgproc import resize_aspect_ratio, normalizeMeanVariance, cvt2HeatmapImg, loadImage
+from .imgproc import resize_aspect_ratio, normalize_mean_variance, cvt_to_heatmap, load_image
 from .refinenet import RefineNet
 
 
@@ -70,7 +70,7 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
     ratio_h = ratio_w = 1 / target_ratio
 
     # pre-processing
-    x = normalizeMeanVariance(img_resized)
+    x = normalize_mean_variance(img_resized)
     x = torch.from_numpy(x).permute(2, 0, 1)  # [h, w, c] to [c, h, w]
     x = Variable(x.unsqueeze(0))  # [c, h, w] to [b, c, h, w]
     if cuda:
@@ -107,7 +107,7 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
     # render results (optional)
     render_img = score_text.copy()
     render_img = np.hstack((render_img, score_link))
-    ret_score_text = cvt2HeatmapImg(render_img)
+    ret_score_text = cvt_to_heatmap(render_img)
 
     if args.show_time:
         print("infer/postproc time : {:.3f}/{:.3f}".format(t0, t1))
@@ -186,7 +186,7 @@ def infer_batch():
 
     # load data
     for k, image_path in enumerate(image_list):
-        image = loadImage(image_path)
+        image = load_image(image_path)
         bboxes, polys, score_text = test_net(net, image,
                                              args.text_threshold, args.link_threshold, args.low_text,
                                              args.cuda, args.poly, refine_net)
