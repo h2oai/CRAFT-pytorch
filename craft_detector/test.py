@@ -17,7 +17,7 @@ from collections import OrderedDict
 from torch.autograd import Variable
 
 from .craft import CRAFT
-from .craft_utils import getDetBoxes, adjustResultCoordinates
+from .craft_utils import get_det_boxes, adjust_result_coordinates
 from .file_utils import get_files, save_result
 from .imgproc import resize_aspect_ratio, normalize_mean_variance, cvt_to_heatmap, load_image
 from .refinenet import RefineNet
@@ -94,11 +94,11 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
     t1 = time.time()
 
     # Post-processing
-    boxes, polys = getDetBoxes(score_text, score_link, text_threshold, link_threshold, low_text, poly)
+    boxes, polys = get_det_boxes(score_text, score_link, text_threshold, link_threshold, low_text, poly)
 
     # coordinate adjustment
-    boxes = adjustResultCoordinates(boxes, ratio_w, ratio_h)
-    polys = adjustResultCoordinates(polys, ratio_w, ratio_h)
+    boxes = adjust_result_coordinates(boxes, ratio_w, ratio_h)
+    polys = adjust_result_coordinates(polys, ratio_w, ratio_h)
     for k in range(len(polys)):
         if polys[k] is None: polys[k] = boxes[k]
 
