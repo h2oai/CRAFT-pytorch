@@ -14,6 +14,7 @@ clean-all: ## Cleans h2o-craft module
 .PHONY: build-h2o-craft
 build-h2o-craft: ## Builds h2o-craft module
 	@echo "----- Building h2o-craft module -----"
+	pipenv update --dev && \
 	(pipenv-setup check || true) && \
 		pipenv-setup sync && \
 		python setup.py bdist_wheel
@@ -39,7 +40,7 @@ docker-build-in-docker: ## pass 'make_target=target' argument to make 'target' i
 		h2oai/h2oocr-build:0.1.0 \
 		-c 'pip3 install --user pipenv && \
 			export PATH="$${HOME}/.local/bin:$${PATH}" && \
-			pipenv sync --dev && \
+			pipenv update --dev && \
 			pipenv run make $(make_target)'
 
 .PHONY: help
