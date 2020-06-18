@@ -16,7 +16,7 @@ build-h2o-craft: ## Builds h2o-craft module
 	@echo "----- Building h2o-craft module -----"
 	pipenv update --dev && \
 	(pipenv-setup check || true) && \
-		pipenv-setup sync && \
+		pipenv-setup sync -p && \
 		python setup.py bdist_wheel
 
 .PHONY: clean-h2o-craft
